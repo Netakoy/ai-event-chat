@@ -16,7 +16,7 @@
     }
 
     #aie-toggle {
-      position: fixed; bottom: 90px; left: 15px; z-index: 9999;
+      position: fixed; bottom: 24px; left: 15px; z-index: 9999;
       width: 56px; height: 56px; border-radius: 50%;
       background: #ddfb48; border: none;
       cursor: pointer; display: flex; align-items: center; justify-content: center;
@@ -27,7 +27,7 @@
     #aie-toggle svg { width: 26px; height: 26px; fill: #1a1a1a; }
 
     #aie-window {
-      position: fixed; bottom: 158px; left: 15px; z-index: 9999;
+      position: fixed; bottom: 92px; left: 15px; z-index: 9999;
       width: 350px; height: 510px;
       background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 20px;
       display: none; flex-direction: column;
@@ -120,12 +120,13 @@
     #aie-send:disabled svg { fill: #555; }
 
     #aie-lead-btn {
-      width: 100%; background: none; border: 1px solid #333;
-      border-radius: 12px; padding: 10px; margin: 4px 0 0;
-      color: #ddfb48; font-size: 13px; cursor: pointer;
-      font-family: inherit; transition: background 0.2s;
+      width: 100%; background: none; border: 1px solid #2a2a2a;
+      border-top: none; border-radius: 0 0 20px 20px;
+      padding: 11px 14px; color: #ddfb48; font-size: 13px;
+      cursor: pointer; font-family: inherit; transition: background 0.2s;
+      text-align: center;
     }
-    #aie-lead-btn:hover { background: rgba(221,251,72,0.07); }
+    #aie-lead-btn:hover { background: rgba(221,251,72,0.06); }
 
     #aie-lead-form {
       position: absolute; inset: 0; background: #1a1a1a;
@@ -194,9 +195,7 @@
             <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
           </button>
         </div>
-        <div style="padding: 0 14px 12px;">
-          <button id="aie-lead-btn">📋 Оставить контакт — Стас напишет вам</button>
-        </div>
+        <button id="aie-lead-btn">📋 Оставить контакт — Стас напишет вам</button>
       </div>
     `);
   }
