@@ -88,6 +88,8 @@
     }
     .aie-msg.typing { color: #555; font-style: italic; }
     .aie-msg.bot strong { color: #ddfb48; font-weight: 600; }
+    .aie-msg.bot a { color: #ddfb48; text-decoration: underline; word-break: break-all; }
+    .aie-msg.bot a:hover { opacity: 0.8; }
     .aie-li { display: flex; gap: 8px; margin: 3px 0; }
     .aie-li-num { color: #ddfb48; font-weight: 600; flex-shrink: 0; min-width: 18px; }
     .aie-li-bullet { color: #ddfb48; flex-shrink: 0; }
@@ -155,18 +157,21 @@
   let isLoading = false;
 
   function renderMarkdown(text) {
-    // Escape HTML to prevent XSS
     const escaped = text
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;');
 
     return escaped
+      // Markdown links: [text](url)
+      .replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+      // Plain URLs: https://...
+      .replace(/(^|[\s(])(https?:\/\/[^\s<)"]+)/g, '$1<a href="$2" target="_blank" rel="noopener">$2</a>')
       // Bold: **text**
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      // Numbered list items: "1. text" at start of line
+      // Numbered list items
       .replace(/^(\d+)\.\s+(.+)$/gm, '<div class="aie-li"><span class="aie-li-num">$1.</span><span>$2</span></div>')
-      // Bullet list items: "- text" or "• text" at start of line
+      // Bullet list items
       .replace(/^[-•]\s+(.+)$/gm, '<div class="aie-li"><span class="aie-li-bullet">•</span><span>$1</span></div>')
       // Double newline → paragraph break
       .replace(/\n\n/g, '<div class="aie-br"></div>')
