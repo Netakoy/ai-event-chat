@@ -1,5 +1,5 @@
 (function () {
-  const API_URL = 'https://VERCEL_URL_PLACEHOLDER/api/chat';
+  const API_URL = 'https://ai-event-chat.vercel.app/api/chat';
 
   const styles = `
     #aie-toggle {
