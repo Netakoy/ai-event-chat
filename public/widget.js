@@ -132,7 +132,6 @@
     input.value = '';
     input.style.height = '40px';
     addMessage(message, 'user');
-    history.push({ role: 'user', content: message });
 
     isLoading = true;
     document.getElementById('aie-send').disabled = true;
@@ -144,14 +143,19 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message, history: history.slice(-10) })
       });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || 'Ошибка сервера');
+      }
       const data = await res.json();
-      const reply = data.reply || data.error || 'Ошибка. Попробуйте ещё раз.';
+      const reply = data.reply || 'Ошибка. Попробуйте ещё раз.';
       typingEl.remove();
       addMessage(reply, 'bot');
+      history.push({ role: 'user', content: message });
       history.push({ role: 'assistant', content: reply });
-    } catch {
+    } catch (e) {
       typingEl.remove();
-      addMessage('Не удалось получить ответ. Проверьте соединение.', 'bot');
+      addMessage(e.message || 'Не удалось получить ответ. Проверьте соединение.', 'bot');
     }
 
     isLoading = false;

@@ -8,7 +8,11 @@ const systemPrompt = readFileSync(join(__dirname, '../system-prompt.txt'), 'utf-
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', 'https://ai-event.ru');
+  const allowedOrigins = ['https://ai-event.ru', 'https://www.ai-event.ru'];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
@@ -26,9 +30,22 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Message is required' });
   }
 
+  if (message.length > 2000) {
+    return res.status(400).json({ error: 'Сообщение слишком длинное.' });
+  }
+
+  const safeHistory = (Array.isArray(history) ? history : [])
+    .filter(m =>
+      m &&
+      (m.role === 'user' || m.role === 'assistant') &&
+      typeof m.content === 'string' &&
+      m.content.length <= 2000
+    )
+    .slice(-10);
+
   const messages = [
     { role: 'system', content: systemPrompt },
-    ...history.slice(-10),
+    ...safeHistory,
     { role: 'user', content: message.trim() }
   ];
 
