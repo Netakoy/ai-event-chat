@@ -2,37 +2,65 @@
   const API_URL = 'https://ai-event-chat.vercel.app/api/chat';
 
   const styles = `
+    @keyframes aie-pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(221,251,72,0.5); }
+      70%  { box-shadow: 0 0 0 14px rgba(221,251,72,0); }
+      100% { box-shadow: 0 0 0 0 rgba(221,251,72,0); }
+    }
+    @keyframes aie-orbit {
+      from { transform: rotate(0deg) translateX(10px) rotate(0deg); }
+      to   { transform: rotate(360deg) translateX(10px) rotate(-360deg); }
+    }
+    @keyframes aie-blink {
+      0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
+    }
+
     #aie-toggle {
       position: fixed; bottom: 24px; left: 24px; z-index: 9999;
       width: 56px; height: 56px; border-radius: 50%;
-      background: #1a1a1a; border: 1px solid #333;
+      background: #ddfb48; border: none;
       cursor: pointer; display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      animation: aie-pulse 2.4s ease-out infinite;
       transition: transform 0.2s;
     }
-    #aie-toggle:hover { transform: scale(1.08); }
-    #aie-toggle svg { width: 24px; height: 24px; fill: #fff; }
+    #aie-toggle:hover { transform: scale(1.1); }
+    #aie-toggle svg { width: 26px; height: 26px; fill: #1a1a1a; }
 
     #aie-window {
       position: fixed; bottom: 92px; left: 24px; z-index: 9999;
-      width: 350px; height: 500px;
-      background: #1a1a1a; border: 1px solid #333; border-radius: 16px;
+      width: 350px; height: 510px;
+      background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 20px;
       display: none; flex-direction: column;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(221,251,72,0.08);
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       overflow: hidden;
     }
     #aie-window.open { display: flex; }
 
     #aie-header {
-      padding: 16px 20px; background: #111;
-      border-bottom: 1px solid #333;
-      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 18px; background: #111;
+      border-bottom: 1px solid #222;
+      display: flex; align-items: center; gap: 12px;
     }
-    #aie-header span { color: #fff; font-size: 15px; font-weight: 600; }
+    #aie-avatar {
+      width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+      background: #ddfb48; display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    #aie-avatar svg { width: 20px; height: 20px; fill: #1a1a1a; }
+    #aie-avatar::after {
+      content: ''; position: absolute; bottom: 1px; right: 1px;
+      width: 9px; height: 9px; border-radius: 50%;
+      background: #4ade80; border: 2px solid #111;
+      animation: aie-blink 2s ease-in-out infinite;
+    }
+    #aie-header-text { flex: 1; }
+    #aie-header-text strong { display: block; color: #fff; font-size: 14px; font-weight: 600; }
+    #aie-header-text small { color: #ddfb48; font-size: 11px; }
     #aie-close {
       background: none; border: none; cursor: pointer;
-      color: #888; font-size: 20px; line-height: 1; padding: 0;
+      color: #555; font-size: 18px; line-height: 1; padding: 4px;
+      margin-left: auto;
     }
     #aie-close:hover { color: #fff; }
 
@@ -42,45 +70,47 @@
     }
     #aie-messages::-webkit-scrollbar { width: 4px; }
     #aie-messages::-webkit-scrollbar-track { background: transparent; }
-    #aie-messages::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+    #aie-messages::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
 
     .aie-msg {
       max-width: 85%; padding: 10px 14px;
-      border-radius: 12px; font-size: 14px; line-height: 1.5;
+      border-radius: 14px; font-size: 14px; line-height: 1.55;
       word-break: break-word;
     }
     .aie-msg.bot {
-      background: #2a2a2a; color: #e5e5e5;
+      background: #222; color: #e0e0e0;
       align-self: flex-start; border-bottom-left-radius: 4px;
     }
     .aie-msg.user {
-      background: #6366f1; color: #fff;
+      background: #ddfb48; color: #1a1a1a;
       align-self: flex-end; border-bottom-right-radius: 4px;
+      font-weight: 500;
     }
-    .aie-msg.typing { color: #666; font-style: italic; }
+    .aie-msg.typing { color: #555; font-style: italic; }
 
     #aie-footer {
-      padding: 12px 16px; border-top: 1px solid #333;
+      padding: 12px 14px; border-top: 1px solid #222;
       display: flex; gap: 8px;
     }
     #aie-input {
-      flex: 1; background: #2a2a2a; border: 1px solid #444;
-      border-radius: 10px; padding: 10px 14px;
+      flex: 1; background: #222; border: 1px solid #333;
+      border-radius: 12px; padding: 10px 14px;
       color: #fff; font-size: 14px; outline: none;
       resize: none; height: 40px; line-height: 20px;
       font-family: inherit;
     }
-    #aie-input::placeholder { color: #666; }
-    #aie-input:focus { border-color: #6366f1; }
+    #aie-input::placeholder { color: #555; }
+    #aie-input:focus { border-color: #ddfb48; }
     #aie-send {
-      background: #6366f1; border: none; border-radius: 10px;
+      background: #ddfb48; border: none; border-radius: 12px;
       width: 40px; height: 40px; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; transition: background 0.2s;
+      flex-shrink: 0; transition: background 0.2s, transform 0.1s;
     }
-    #aie-send:hover { background: #5254cc; }
-    #aie-send:disabled { background: #333; cursor: default; }
-    #aie-send svg { width: 18px; height: 18px; fill: #fff; }
+    #aie-send:hover { background: #c8e620; transform: scale(1.05); }
+    #aie-send:disabled { background: #2a2a2a; cursor: default; transform: none; }
+    #aie-send svg { width: 18px; height: 18px; fill: #1a1a1a; }
+    #aie-send:disabled svg { fill: #555; }
   `;
 
   function injectStyles() {
@@ -92,11 +122,17 @@
   function buildWidget() {
     document.body.insertAdjacentHTML('beforeend', `
       <div id="aie-toggle" title="Задать вопрос">
-        <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 2a1 1 0 0 1 .894.553l2.184 4.371 4.868.707a1 1 0 0 1 .554 1.706l-3.52 3.432.831 4.846a1 1 0 0 1-1.45 1.054L12 16.347l-4.361 2.322a1 1 0 0 1-1.45-1.054l.831-4.846L3.5 9.337a1 1 0 0 1 .554-1.706l4.868-.707L11.106 2.553A1 1 0 0 1 12 2z"/></svg>
       </div>
       <div id="aie-window">
         <div id="aie-header">
-          <span>Ассистент</span>
+          <div id="aie-avatar">
+            <svg viewBox="0 0 24 24"><path d="M12 2a1 1 0 0 1 .894.553l2.184 4.371 4.868.707a1 1 0 0 1 .554 1.706l-3.52 3.432.831 4.846a1 1 0 0 1-1.45 1.054L12 16.347l-4.361 2.322a1 1 0 0 1-1.45-1.054l.831-4.846L3.5 9.337a1 1 0 0 1 .554-1.706l4.868-.707L11.106 2.553A1 1 0 0 1 12 2z"/></svg>
+          </div>
+          <div id="aie-header-text">
+            <strong>AI Ассистент</strong>
+            <small>онлайн</small>
+          </div>
           <button id="aie-close">✕</button>
         </div>
         <div id="aie-messages"></div>
