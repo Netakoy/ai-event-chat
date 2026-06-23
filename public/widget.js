@@ -3,7 +3,7 @@
 
   const styles = `
     #aie-toggle {
-      position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+      position: fixed; bottom: 24px; left: 24px; z-index: 9999;
       width: 56px; height: 56px; border-radius: 50%;
       background: #1a1a1a; border: 1px solid #333;
       cursor: pointer; display: flex; align-items: center; justify-content: center;
@@ -14,7 +14,7 @@
     #aie-toggle svg { width: 24px; height: 24px; fill: #fff; }
 
     #aie-window {
-      position: fixed; bottom: 92px; right: 24px; z-index: 9999;
+      position: fixed; bottom: 92px; left: 24px; z-index: 9999;
       width: 350px; height: 500px;
       background: #1a1a1a; border: 1px solid #333; border-radius: 16px;
       display: none; flex-direction: column;
