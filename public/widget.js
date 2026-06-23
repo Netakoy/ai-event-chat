@@ -16,7 +16,7 @@
     }
 
     #aie-toggle {
-      position: fixed; bottom: 24px; left: 24px; z-index: 9999;
+      position: fixed; bottom: 90px; left: 15px; z-index: 9999;
       width: 56px; height: 56px; border-radius: 50%;
       background: #ddfb48; border: none;
       cursor: pointer; display: flex; align-items: center; justify-content: center;
@@ -27,7 +27,7 @@
     #aie-toggle svg { width: 26px; height: 26px; fill: #1a1a1a; }
 
     #aie-window {
-      position: fixed; bottom: 92px; left: 24px; z-index: 9999;
+      position: fixed; bottom: 158px; left: 15px; z-index: 9999;
       width: 350px; height: 510px;
       background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 20px;
       display: none; flex-direction: column;
