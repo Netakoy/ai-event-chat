@@ -120,11 +120,12 @@
     #aie-send:disabled svg { fill: #555; }
 
     #aie-lead-btn {
-      width: 100%; background: none; border: 1px solid #2a2a2a;
-      border-top: none; border-radius: 0 0 20px 20px;
-      padding: 11px 14px; color: #ddfb48; font-size: 13px;
+      width: 100%; box-sizing: border-box; background: none;
+      border: 1px solid #2a2a2a; border-top: none;
+      border-radius: 0 0 20px 20px;
+      padding: 11px 0; color: #ddfb48; font-size: 13px;
       cursor: pointer; font-family: inherit; transition: background 0.2s;
-      text-align: center;
+      text-align: center; display: block;
     }
     #aie-lead-btn:hover { background: rgba(221,251,72,0.06); }
 
