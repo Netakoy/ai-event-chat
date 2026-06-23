@@ -1,6 +1,7 @@
 {
   "name": "ai-event-chat-widget",
   "version": "1.0.0",
+  "type": "module",
   "description": "Chat widget for AI Event website",
   "main": "index.js",
   "scripts": {
