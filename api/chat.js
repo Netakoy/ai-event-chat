@@ -1,10 +1,14 @@
 import OpenAI from 'openai';
 import { readFileSync } from 'fs';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { join } from 'path';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const systemPrompt = readFileSync(join(__dirname, '../system-prompt.txt'), 'utf-8');
+let systemPrompt;
+try {
+  systemPrompt = readFileSync(join(process.cwd(), 'system-prompt.txt'), 'utf-8');
+} catch {
+  systemPrompt = 'Ты — ассистент сайта. Помогай посетителям с их вопросами.';
+}
+
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export default async function handler(req, res) {
